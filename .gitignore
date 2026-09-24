@@ -1,0 +1,27 @@
+# Salida del build y archivos generados por Astro
+dist/
+.astro/
+
+# Dependencias
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+.idea/
+
+# Referencias del diseño (Claude Design) y CV original: no son código del sitio.
+# El CV publicado vive en public/cv/ (por eso las rutas van ancladas a la raíz).
+/diseno/
+/cv/

@@ -1,0 +1,7 @@
+dist/
+.astro/
+node_modules/
+/diseno/
+/cv/
+public/
+package-lock.json
