@@ -1,0 +1,42 @@
+---
+import { perfil } from '../data/perfil';
+import { numeroMision, obtenerMisiones } from '../utils/misiones';
+import EncabezadoSeccion from './EncabezadoSeccion.astro';
+import TarjetaMision from './TarjetaMision.astro';
+
+const misiones = await obtenerMisiones();
+---
+
+<section id="misiones" class="seccion" aria-labelledby="misiones-titulo">
+  <div class="contenedor seccion__interior capa-contenido">
+    <EncabezadoSeccion seccion={perfil.secciones.misiones} idTitulo="misiones-titulo" />
+    {misiones.length > 0 ? (
+      <ol class="misiones">
+        {misiones.map((mision, indice) => (
+          <li>
+            <TarjetaMision mision={mision} numero={numeroMision(indice)} />
+          </li>
+        ))}
+      </ol>
+    ) : (
+      <p class="misiones__vacio">Nuevas misiones en preparación.</p>
+    )}
+  </div>
+</section>
+
+<style>
+  .misiones {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(24px, 3vw, 36px);
+    margin: clamp(36px, 4vw, 56px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .misiones__vacio {
+    margin-top: 32px;
+    font-size: 18px;
+    color: var(--texto-86);
+  }
+</style>

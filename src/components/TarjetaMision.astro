@@ -1,0 +1,150 @@
+---
+import type { Mision } from '../utils/misiones';
+import { ruta } from '../utils/rutas';
+import PortadaMision from './PortadaMision.astro';
+
+interface Props {
+  mision: Mision;
+  /** Número con dos dígitos ("01"). */
+  numero: string;
+}
+
+const { mision, numero } = Astro.props;
+const { data } = mision;
+const idTitulo = `mision-${mision.id}`;
+---
+
+<article class="mision" aria-labelledby={idTitulo}>
+  <div class="mision__portada">
+    <PortadaMision mision={mision} sizes="(min-width: 64em) min(648px, 50vw), 100vw" />
+  </div>
+
+  <div class="mision__cuerpo">
+    <p class="mision__meta">
+      <span class="mision__numero">Misión {numero}</span>
+      <span>{data.anio}</span>
+      <span>{data.categoria}</span>
+      {data.borrador && <span class="mision__borrador">Borrador</span>}
+    </p>
+    <h3 id={idTitulo} class="mision__codigo">
+      {data.codigo}
+    </h3>
+    <p class="mision__resumen">{data.resumen}</p>
+
+    <dl class="mision__detalle">
+      <div class="mision__dato">
+        <dt class="etiqueta">El problema</dt>
+        <dd>{data.problema}</dd>
+      </div>
+      <div class="mision__dato">
+        <dt class="etiqueta">El resultado</dt>
+        <dd class="mision__resultado">{data.resultado}</dd>
+      </div>
+    </dl>
+
+    <ul class="lista-chips" aria-label="Stack">
+      {data.stack.map((tecnologia) => (
+        <li class="chip chip--energia">{tecnologia}</li>
+      ))}
+    </ul>
+
+    <div>
+      <a class="boton boton--chico boton--primario" href={ruta(`/misiones/${mision.id}/`)}>
+        Ver misión <span class="sr-only">{data.codigo}</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .mision {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
+    overflow: hidden;
+    border: 1px solid var(--borde-14);
+    border-radius: var(--radio-grande);
+    background: var(--color-tarjeta-mision);
+    transition:
+      border-color 0.4s,
+      box-shadow 0.4s;
+  }
+
+  .mision:hover,
+  .mision:focus-within {
+    border-color: rgb(var(--accrgb) / 0.7);
+    box-shadow: 0 0 50px -12px rgb(var(--accrgb) / 0.55);
+  }
+
+  .mision__portada {
+    position: relative;
+    min-height: clamp(230px, 26vw, 420px);
+    background: var(--color-panel-imagen);
+  }
+
+  .mision__cuerpo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding: clamp(26px, 3.4vw, 52px);
+  }
+
+  .mision__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--texto-78);
+  }
+
+  .mision__numero {
+    color: var(--acc);
+    transition: color 0.4s;
+  }
+
+  .mision__borrador {
+    color: var(--color-dorado);
+  }
+
+  .mision__codigo {
+    font-family: var(--font-titulo);
+    font-size: clamp(26px, 2.8vw, 40px);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--color-dorado);
+  }
+
+  .mision__resumen {
+    font-size: clamp(18px, 1.5vw, 21px);
+    font-weight: 500;
+    line-height: 1.45;
+  }
+
+  .mision__detalle {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+  }
+
+  .mision__dato {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mision__dato dd {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--texto-90);
+  }
+
+  .mision__dato .mision__resultado {
+    font-weight: 600;
+    color: var(--color-blanco);
+  }
+</style>

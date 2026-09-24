@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets';
+import { altImagen, type Mision } from '../utils/misiones';
+
+interface Props {
+  mision: Mision;
+  /** Tamaños con los que se muestra, para que el navegador elija la resolución justa. */
+  sizes: string;
+  /** Carga inmediata (cuando la portada se ve apenas entra la página). */
+  prioridad?: boolean;
+}
+
+const { mision, sizes, prioridad = false } = Astro.props;
+const { imagen, codigo } = mision.data;
+// Anchos a generar: nunca más grandes que el original (Astro no agranda imágenes).
+const anchos = imagen
+  ? [...[480, 720, 960, 1296].filter((ancho) => ancho < imagen.width), imagen.width]
+  : [];
+---
+
+{imagen ? (
+  <Image
+    class="portada__imagen"
+    src={imagen}
+    alt={altImagen(mision)}
+    widths={anchos}
+    sizes={sizes}
+    priority={prioridad}
+  />
+) : (
+  <div class="portada__vacia" aria-hidden="true">
+    <span class="portada__codigo">{codigo}</span>
+  </div>
+)}
+
+<style>
+  .portada__imagen,
+  .portada__vacia {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .portada__imagen {
+    object-fit: cover;
+  }
+
+  /* Sin imagen: el nombre en clave en contorno, con el brillo de la energía activa. */
+  .portada__vacia {
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+      radial-gradient(60% 70% at 50% 55%, rgb(var(--accrgb) / 0.2), transparent 70%),
+      var(--color-panel-imagen);
+    transition: background 0.6s;
+  }
+
+  .portada__codigo {
+    padding-inline: 16px;
+    font-family: var(--font-titulo);
+    font-size: clamp(34px, 6vw, 84px);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(243 238 231 / 0.22);
+  }
+</style>
