@@ -1,0 +1,35 @@
+---
+// Canvas fijo con el campo de estrellas. La lógica está en src/scripts/campo-estelar.ts.
+---
+
+<div class="campo-estelar" aria-hidden="true">
+  <canvas data-campo-estelar></canvas>
+</div>
+
+<script>
+  import { iniciarCampoEstelar } from '../scripts/campo-estelar';
+
+  iniciarCampoEstelar();
+</script>
+
+<style>
+  /*
+   * Queda entre los fondos de sección (capa 1) y el contenido (capa 3), como en v3.
+   * Alto 100lvh: no se redimensiona cuando la barra del navegador móvil aparece o se va.
+   */
+  .campo-estelar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100lvh;
+    z-index: var(--capa-estrellas);
+    pointer-events: none;
+  }
+
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+</style>

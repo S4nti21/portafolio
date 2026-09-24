@@ -1,5 +1,6 @@
 ---
 import { Font } from 'astro:assets';
+import CampoEstelar from '../components/CampoEstelar.astro';
 import { CLAVE_ENERGIA, ENERGIAS } from '../data/energias';
 import '../styles/tokens.css';
 import '../styles/global.css';
@@ -11,9 +12,11 @@ interface Props {
   descripcion: string;
   /** Precarga Star Jedi: solo donde se ve en el primer pantallazo (home e intro). */
   precargarSaga?: boolean;
+  /** Campo estelar de fondo (la intro sola tiene el suyo propio). */
+  estrellas?: boolean;
 }
 
-const { titulo, descripcion, precargarSaga = false } = Astro.props;
+const { titulo, descripcion, precargarSaga = false, estrellas = true } = Astro.props;
 const idsEnergia = ENERGIAS.map((energia) => energia.id);
 ---
 
@@ -54,6 +57,7 @@ const idsEnergia = ENERGIAS.map((energia) => energia.id);
     <a class="salto" href="#contenido">
       Saltar al contenido
     </a>
+    {estrellas && <CampoEstelar />}
     <slot />
   </body>
 </html>

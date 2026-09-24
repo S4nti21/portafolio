@@ -103,6 +103,22 @@ a:hover {
   box-sizing: content-box;
 }
 
+/*
+ * Todo el contenido va por encima del campo estelar. Ojo: no poner z-index en <main>
+ * ni en las secciones, porque los fondos (capa 1) tienen que quedar debajo de las estrellas.
+ */
+.capa-contenido {
+  position: relative;
+  z-index: var(--capa-contenido);
+}
+
+.capa-fondo {
+  position: absolute;
+  inset: 0;
+  z-index: var(--capa-fondo);
+  pointer-events: none;
+}
+
 /* Link para saltar al contenido: aparece solo al recibir foco */
 .salto {
   position: fixed;
