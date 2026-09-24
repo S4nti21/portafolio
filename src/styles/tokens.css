@@ -1,0 +1,107 @@
+/*
+ * Tokens de diseño tomados de "Portafolio v3" (Claude Design).
+ * Todo lo visual que se repite sale de acá: colores, tipografías, medidas y brillos.
+ */
+
+:root {
+  /* Colores base */
+  --color-fondo: #030308;
+  --color-texto: #f3eee7;
+  --color-dorado: #ffc83d;
+  --color-intro: #6fb6ff;
+  --color-blanco: #fff;
+  --color-tarjeta: rgb(6 6 14 / 0.88);
+  --color-tarjeta-mision: rgb(6 6 14 / 0.9);
+  --color-panel-imagen: #0a0a12;
+  --color-panel-foto: #07070d;
+  --color-velo: rgb(3 3 8 / 0.6);
+
+  /* Texto claro con distintas opacidades (todas cumplen contraste AA sobre el fondo) */
+  --texto-90: rgb(243 238 231 / 0.9);
+  --texto-88: rgb(243 238 231 / 0.88);
+  --texto-86: rgb(243 238 231 / 0.86);
+  --texto-78: rgb(243 238 231 / 0.78);
+  --texto-75: rgb(243 238 231 / 0.75);
+  --texto-72: rgb(243 238 231 / 0.72);
+
+  /* Bordes */
+  --borde-10: rgb(243 238 231 / 0.1);
+  --borde-14: rgb(243 238 231 / 0.14);
+  --borde-16: rgb(243 238 231 / 0.16);
+  --borde-22: rgb(243 238 231 / 0.22);
+  --borde-30: rgb(243 238 231 / 0.3);
+  --borde-40: rgb(243 238 231 / 0.4);
+
+  /* Energías: hex para brillos y canales RGB para usar con opacidad */
+  --energia-rojo: #ff4a4a;
+  --energia-rojo-rgb: 255 74 74;
+  --energia-azul: #4a8cff;
+  --energia-azul-rgb: 74 140 255;
+  --energia-verde: #3ee07a;
+  --energia-verde-rgb: 62 224 122;
+  --energia-violeta: #b07aff;
+  --energia-violeta-rgb: 176 122 255;
+
+  /* Energía activa (azul por defecto). Se usa como rgb(var(--accrgb) / 0.5). */
+  --acc: var(--energia-azul);
+  --accrgb: var(--energia-azul-rgb);
+
+  /*
+   * Tipografías. Las variables --font-<familia> las genera la Fonts API de Astro
+   * (ver astro.config.mjs); acá solo se les da un rol.
+   */
+  --font-titulo: var(--font-syncopate);
+  --font-cuerpo: var(--font-archivo);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-saga: var(--font-star-jedi), var(--font-syncopate);
+
+  /* Layout */
+  --ancho-contenido: 1296px;
+  --margen-lateral: clamp(20px, 5vw, 72px);
+  --espacio-seccion: clamp(80px, 10vw, 150px);
+  --alto-nav: 64px;
+
+  /* Radios */
+  --radio-pildora: 999px;
+  --radio-tarjeta: 22px;
+  --radio-grande: 24px;
+
+  /* Movimiento */
+  --curva-hoja: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Brillos de energía */
+  --brillo-boton:
+    0 0 0 2px var(--acc), 0 0 18px 4px var(--acc), 0 0 50px 10px rgb(var(--accrgb) / 0.5),
+    inset 0 0 14px rgb(var(--accrgb) / 0.8);
+  --brillo-boton-chico:
+    0 0 0 2px var(--acc), 0 0 16px 4px var(--acc), 0 0 44px 8px rgb(var(--accrgb) / 0.5);
+  --brillo-hoja:
+    0 0 4px 1px var(--acc), 0 0 12px 3px var(--acc), 0 0 32px 4px rgb(var(--accrgb) / 0.45);
+  --brillo-hoja-hero:
+    0 0 4px 1px var(--acc), 0 0 14px 3px var(--acc), 0 0 40px 6px rgb(var(--accrgb) / 0.55);
+  --brillo-hoja-nivel: 0 0 4px 1px var(--acc), 0 0 12px 3px var(--acc);
+
+  /* Capas: el campo estelar queda entre los fondos de sección y el contenido */
+  --capa-fondo: 1;
+  --capa-estrellas: 2;
+  --capa-contenido: 3;
+  --capa-nav: 20;
+  --capa-salto: 30;
+  --capa-intro: 200;
+}
+
+/* El script inline del <head> pone data-energia en <html> antes del primer pintado. */
+:root[data-energia='rojo'] {
+  --acc: var(--energia-rojo);
+  --accrgb: var(--energia-rojo-rgb);
+}
+
+:root[data-energia='verde'] {
+  --acc: var(--energia-verde);
+  --accrgb: var(--energia-verde-rgb);
+}
+
+:root[data-energia='violeta'] {
+  --acc: var(--energia-violeta);
+  --accrgb: var(--energia-violeta-rgb);
+}

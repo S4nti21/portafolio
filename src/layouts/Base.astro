@@ -1,0 +1,59 @@
+---
+import { Font } from 'astro:assets';
+import { CLAVE_ENERGIA, ENERGIAS } from '../data/energias';
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+interface Props {
+  /** Título de la pestaña (y de las tarjetas para redes). */
+  titulo: string;
+  /** Descripción para buscadores y redes. */
+  descripcion: string;
+  /** Precarga Star Jedi: solo donde se ve en el primer pantallazo (home e intro). */
+  precargarSaga?: boolean;
+}
+
+const { titulo, descripcion, precargarSaga = false } = Astro.props;
+const idsEnergia = ENERGIAS.map((energia) => energia.id);
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#030308" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+
+    <!--
+      Antes del primer pintado: marca que hay JS y aplica la energía guardada,
+      así los colores no parpadean al cargar.
+    -->
+    <script is:inline define:vars={{ idsEnergia, CLAVE_ENERGIA }}>
+      const raiz = document.documentElement;
+      raiz.classList.add('js');
+      try {
+        const guardada = localStorage.getItem(CLAVE_ENERGIA);
+        if (guardada && idsEnergia.includes(guardada)) {
+          raiz.setAttribute('data-energia', guardada);
+        }
+      } catch {
+        // Sin acceso a localStorage (modo privado estricto): queda la energía por defecto.
+      }
+    </script>
+    <Font cssVariable="--font-syncopate" preload />
+    <Font cssVariable="--font-archivo" preload={[{ weight: '600', style: 'normal' }]} />
+    <Font cssVariable="--font-jetbrains-mono" preload />
+    <Font cssVariable="--font-star-jedi" preload={precargarSaga} />
+
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="salto" href="#contenido">
+      Saltar al contenido
+    </a>
+    <slot />
+  </body>
+</html>

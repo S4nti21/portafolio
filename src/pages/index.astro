@@ -1,16 +1,60 @@
 ---
-// Página provisoria de la etapa de setup: se reemplaza en las etapas siguientes.
+import Base from '../layouts/Base.astro';
 ---
 
-<html lang="es-AR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Santiago Weidmann</title>
-  </head>
-  <body>
-    <main>
-      <h1>Santiago Weidmann</h1>
-    </main>
-  </body>
-</html>
+<Base
+  titulo="Santiago Weidmann · Desarrollador de Software Jr."
+  descripcion="Portafolio de Santiago Weidmann, desarrollador de software Jr. en Santa Fe, Argentina."
+  precargarSaga
+>
+  <main id="contenido" tabindex="-1" class="contenedor prueba">
+    <p class="etiqueta">Santa Fe · Episodio I de mi carrera</p>
+    <h1 class="saga">Santiago Weidmann</h1>
+    <p class="saga saga--mayus">Santiago Weidmann</p>
+    <h2 class="titulo">Mi historia</h2>
+    <p class="cuerpo">Construyo aplicaciones web de punta a punta.</p>
+    <p class="cuerpo italica">Del backend en Java y Spring al frontend en React.</p>
+    <p>
+      <a class="boton boton--primario" href="#contenido">
+        Ver misiones
+      </a>
+    </p>
+    <ul class="lista-chips">
+      <li class="chip">Java</li>
+      <li class="chip chip--entrenando">Angular</li>
+      <li class="chip chip--energia">React</li>
+    </ul>
+  </main>
+</Base>
+
+<style>
+  /* Página de prueba de tokens y fuentes: se reemplaza al armar las secciones. */
+  .prueba {
+    display: grid;
+    gap: 24px;
+    padding-block: 120px;
+  }
+
+  .saga {
+    font-family: var(--font-saga);
+    font-size: clamp(38px, 7.4vw, 112px);
+    font-weight: 400;
+    color: var(--color-dorado);
+    text-transform: lowercase;
+  }
+
+  .saga--mayus {
+    text-transform: uppercase;
+  }
+
+  .titulo {
+    font-family: var(--font-titulo);
+    font-size: clamp(30px, 4.6vw, 66px);
+    color: var(--color-dorado);
+    text-transform: uppercase;
+  }
+
+  .italica {
+    font-style: italic;
+  }
+</style>
