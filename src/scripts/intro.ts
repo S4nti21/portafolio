@@ -55,6 +55,8 @@ const COLOR_ESTRELLA = 'rgb(255,246,236)';
  * pantalla) desde el primer cuadro.
  */
 const OPACIDAD_MINIMA_CRAWL = 0.01;
+/** Máximo que se espera a las fuentes antes de arrancar la animación. */
+const ESPERA_MAXIMA_FUENTES_MS = 1500;
 
 const limitar = (valor: number): number => Math.max(0, Math.min(1, valor));
 const envolver = (valor: number, limite: number): number => ((valor % limite) + limite) % limite;
@@ -85,6 +87,8 @@ class Intro {
   private ultimo = 0;
   private idFrame = 0;
   private terminada = false;
+  /** Cambia en cada reproducción: descarta esperas de una reproducción anterior. */
+  private turno = 0;
   private familiaNombre = 'sans-serif';
   private colorNombre = '#ffc83d';
 
@@ -145,6 +149,8 @@ class Intro {
   }
 
   private reproducir(): void {
+    const turno = ++this.turno;
+    this.detener();
     this.terminada = false;
     delete this.raiz.dataset.terminada;
     this.tiempo = 0;
@@ -152,13 +158,34 @@ class Intro {
     this.linea.style.opacity = '0';
     this.crawl.style.opacity = String(OPACIDAD_MINIMA_CRAWL);
     this.ajustarTamano();
-    // Mientras las fuentes cargan, el primer cuadro ya muestra el cielo.
-    void document.fonts.load(`48px ${this.familiaNombre}`);
-    if (this.consultaMovimiento.matches) {
-      this.dibujarCielo(true);
-      return;
+    this.dibujarCielo(true);
+    if (this.consultaMovimiento.matches) return;
+
+    // La animación arranca con las fuentes ya cargadas: si el texto del crawl cambiara de
+    // fuente en pleno vuelo, se reacomodaría y contaría como un salto de layout (CLS).
+    this.raiz.dataset.cargando = '';
+    void this.esperarFuentes().then(() => {
+      if (turno !== this.turno || this.terminada || !this.estaAbierta()) return;
+      delete this.raiz.dataset.cargando;
+      this.ajustarTamano();
+      this.arrancar();
+    });
+  }
+
+  /** Espera las fuentes de la intro, con un tope para no demorarla si la red está lenta. */
+  private async esperarFuentes(): Promise<void> {
+    const limite = new Promise((resolver) => window.setTimeout(resolver, ESPERA_MAXIMA_FUENTES_MS));
+    try {
+      const cuerpo = getComputedStyle(this.crawl).fontFamily;
+      const cargas = Promise.all([
+        document.fonts.load(`700 40px ${cuerpo}`),
+        document.fonts.load(`400 40px ${cuerpo}`),
+        document.fonts.load(`48px ${this.familiaNombre}`),
+      ]).then(() => document.fonts.ready);
+      await Promise.race([cargas, limite]);
+    } catch {
+      // Si alguna fuente no carga, la animación arranca igual con la de respaldo.
     }
-    this.arrancar();
   }
 
   private repetir(): void {
@@ -192,6 +219,10 @@ class Intro {
     const hojaHero = document.querySelector<HTMLElement>('[data-hoja="hero"]');
     if (hojaHero) reencenderHoja(hojaHero);
     if (teniaFoco) document.getElementById('contenido')?.focus({ preventScroll: true });
+  }
+
+  private esperandoFuentes(): boolean {
+    return this.raiz.dataset.cargando !== undefined;
   }
 
   private estaAbierta(): boolean {
@@ -314,13 +345,21 @@ class Intro {
 
   private readonly alRedimensionar = (): void => {
     if (!this.estaAbierta() || !this.ajustarTamano()) return;
-    if (this.terminada || this.consultaMovimiento.matches) this.dibujarCielo(true);
+    // Sin loop corriendo (terminada, estática o esperando fuentes) hay que redibujar a mano.
+    if (this.terminada || this.consultaMovimiento.matches || this.esperandoFuentes()) {
+      this.dibujarCielo(true);
+    }
   };
 
   private readonly alCambiarVisibilidad = (): void => {
     if (document.hidden) {
       this.detener();
-    } else if (this.estaAbierta() && !this.terminada && !this.consultaMovimiento.matches) {
+    } else if (
+      this.estaAbierta() &&
+      !this.terminada &&
+      !this.consultaMovimiento.matches &&
+      !this.esperandoFuentes()
+    ) {
       this.arrancar();
     }
   };
