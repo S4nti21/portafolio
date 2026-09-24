@@ -1,0 +1,80 @@
+---
+/**
+ * Hoja de energía: línea blanca con resplandor del color de energía que se enciende
+ * (scaleX 0 → 1) cuando entra en pantalla.
+ */
+interface Props {
+  /**
+   * - seccion: separador al comienzo de cada sección.
+   * - hero: la del inicio, centrada.
+   * - nivel: la barra de cada nivel de Entrenamiento.
+   */
+  variante?: 'seccion' | 'hero' | 'nivel';
+  /** Largo relativo entre 0 y 1 (solo para las hojas de nivel). */
+  largo?: number;
+  /** Retraso del encendido, en segundos. */
+  retraso?: number;
+}
+
+const { variante = 'seccion', largo = 1, retraso = 0 } = Astro.props;
+const estilo = `--largo: ${Math.round(largo * 100)}%; --retraso: ${retraso}s;`;
+---
+
+<div
+  class:list={['hoja', `hoja--${variante}`]}
+  data-hoja={variante}
+  style={estilo}
+  aria-hidden="true"
+></div>
+
+<script>
+  import { iniciarHojas } from '../scripts/hojas';
+
+  iniciarHojas();
+</script>
+
+<style>
+  .hoja {
+    height: 3px;
+    border-radius: 3px;
+    background: var(--color-blanco);
+    box-shadow: var(--brillo-hoja);
+    transform-origin: left center;
+    transition:
+      transform 1.3s var(--curva-hoja) var(--retraso),
+      box-shadow 0.5s;
+  }
+
+  .hoja--seccion {
+    margin-bottom: 48px;
+  }
+
+  .hoja--hero {
+    width: min(320px, 60%);
+    height: 4px;
+    border-radius: 4px;
+    box-shadow: var(--brillo-hoja-hero);
+    transform-origin: center;
+    transition:
+      transform 1.2s var(--curva-hoja) var(--retraso),
+      box-shadow 0.5s;
+  }
+
+  .hoja--nivel {
+    width: var(--largo);
+    height: 100%;
+    border-radius: 4px;
+    box-shadow: var(--brillo-hoja-nivel);
+  }
+
+  /* Solo se apagan si hay JS para volver a encenderlas. */
+  :global(.js) .hoja:not([data-encendida]) {
+    transform: scaleX(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .hoja:not([data-encendida]) {
+      transform: none;
+    }
+  }
+</style>

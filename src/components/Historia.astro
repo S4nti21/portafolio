@@ -1,0 +1,141 @@
+---
+import { Picture } from 'astro:assets';
+import foto from '../assets/foto-perfil.webp';
+import { perfil } from '../data/perfil';
+import EncabezadoSeccion from './EncabezadoSeccion.astro';
+
+const { historia } = perfil;
+---
+
+<section id="historia" class="seccion" aria-labelledby="historia-titulo">
+  <div class="contenedor seccion__interior capa-contenido">
+    <EncabezadoSeccion seccion={perfil.secciones.historia} idTitulo="historia-titulo" />
+
+    <div class="historia">
+      <div class="historia__texto">
+        <p class="historia__cita">“{historia.cita}”</p>
+        <p class="historia__parrafo">{historia.texto}</p>
+        <dl class="historia__datos">
+          {historia.datos.map((dato) => (
+            <div class="historia__dato">
+              <dt class="etiqueta">{dato.etiqueta}</dt>
+              <dd>{dato.valor}</dd>
+            </div>
+          ))}
+          <div class="historia__dato">
+            <dt class="etiqueta">{historia.estado.etiqueta}</dt>
+            <dd class="historia__estado">
+              <span class="historia__punto" aria-hidden="true"></span>
+              {historia.estado.valor}
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="historia__foto">
+        <Picture
+          class="historia__imagen"
+          src={foto}
+          alt={historia.fotoAlt}
+          formats={['avif']}
+          fallbackFormat="webp"
+          widths={[352, 440, 696]}
+          sizes="(min-width: 30em) 440px, calc(100vw - 40px)"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .historia {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    align-items: center;
+    gap: clamp(44px, 6vw, 100px);
+    margin-top: clamp(36px, 4vw, 56px);
+  }
+
+  .historia__texto {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .historia__cita {
+    font-size: clamp(28px, 3.2vw, 44px);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .historia__parrafo {
+    max-width: 56ch;
+    font-size: 17px;
+    line-height: 1.7;
+    text-wrap: pretty;
+    color: var(--texto-86);
+  }
+
+  /* Cuatro datos en 2×2 (en v3 eran tres). */
+  .historia__datos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    padding-top: 26px;
+    border-top: 1px solid var(--borde-14);
+  }
+
+  .historia__dato {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .historia__dato dd {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .historia__estado {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .historia__punto {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-blanco);
+    box-shadow: 0 0 6px 2px var(--acc);
+    transition: box-shadow 0.4s;
+  }
+
+  .historia__foto {
+    position: relative;
+    justify-self: center;
+    width: 100%;
+    max-width: 440px;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: var(--radio-grande);
+    background: var(--color-panel-foto);
+    box-shadow:
+      0 0 0 1px rgb(var(--accrgb) / 0.5),
+      0 0 60px -10px rgb(var(--accrgb) / 0.55);
+    transition: box-shadow 0.6s;
+  }
+
+  .historia__foto :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

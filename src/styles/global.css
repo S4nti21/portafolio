@@ -77,6 +77,11 @@ a:hover {
   outline-offset: 3px;
 }
 
+/* Destinos de salto (como <main>): reciben foco, pero no son controles. */
+[tabindex='-1']:focus {
+  outline: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
@@ -110,6 +115,15 @@ a:hover {
 .capa-contenido {
   position: relative;
   z-index: var(--capa-contenido);
+}
+
+/* Secciones: sin z-index, para que el campo estelar se intercale entre fondo y contenido. */
+.seccion {
+  position: relative;
+}
+
+.seccion__interior {
+  padding-block: var(--espacio-seccion);
 }
 
 .capa-fondo {

@@ -1,0 +1,97 @@
+---
+import { perfil } from '../data/perfil';
+import EncabezadoSeccion from './EncabezadoSeccion.astro';
+import FondoSeccion from './FondoSeccion.astro';
+import Hoja from './Hoja.astro';
+
+const { entrenamiento } = perfil;
+/** Las hojas de cada nivel se encienden escalonadas, como en v3. */
+const RETRASO_ENTRE_NIVELES = 0.15;
+---
+
+<section id="entrenamiento" class="seccion" aria-labelledby="entrenamiento-titulo">
+  <FondoSeccion nombre="entrenamiento" />
+  <div class="contenedor seccion__interior capa-contenido">
+    <EncabezadoSeccion seccion={perfil.secciones.entrenamiento} idTitulo="entrenamiento-titulo">
+      <p class="entrenamiento__bajada">{entrenamiento.subtitulo}</p>
+    </EncabezadoSeccion>
+
+    <ul class="niveles">
+      {entrenamiento.niveles.map((nivel, indice) => (
+        <li class="nivel">
+          <p class="nivel__cabecera">
+            <span>Nivel {nivel.numero}</span>
+            <span>{nivel.descripcion}</span>
+          </p>
+          <h3 class="nivel__rango">{nivel.rango}</h3>
+          <div class="nivel__pista">
+            <Hoja variante="nivel" largo={nivel.largo} retraso={indice * RETRASO_ENTRE_NIVELES} />
+          </div>
+          <ul class="lista-chips" aria-label={`Habilidades: ${nivel.rango}`}>
+            {nivel.habilidades.map((habilidad) => (
+              <li class:list={['chip', { 'chip--entrenando': nivel.enEntrenamiento }]}>
+                {habilidad}
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .entrenamiento__bajada {
+    max-width: 52ch;
+    margin-top: 18px;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--texto-88);
+  }
+
+  .niveles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: clamp(16px, 2vw, 24px);
+    margin: clamp(36px, 4vw, 56px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nivel {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: clamp(24px, 2.6vw, 36px);
+    border: 1px solid var(--borde-14);
+    border-radius: var(--radio-tarjeta);
+    background: var(--color-tarjeta);
+  }
+
+  .nivel__cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--texto-75);
+  }
+
+  .nivel__rango {
+    font-family: var(--font-titulo);
+    font-size: clamp(22px, 2vw, 28px);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-dorado);
+  }
+
+  .nivel__pista {
+    height: 4px;
+    border-radius: 4px;
+    background: rgb(243 238 231 / 0.08);
+  }
+</style>

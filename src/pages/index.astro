@@ -1,4 +1,9 @@
 ---
+import Contacto from '../components/Contacto.astro';
+import Entrenamiento from '../components/Entrenamiento.astro';
+import Footer from '../components/Footer.astro';
+import Hero from '../components/Hero.astro';
+import Historia from '../components/Historia.astro';
 import Nav from '../components/Nav.astro';
 import { perfil } from '../data/perfil';
 import Base from '../layouts/Base.astro';
@@ -7,49 +12,10 @@ import Base from '../layouts/Base.astro';
 <Base titulo={perfil.seo.titulo} descripcion={perfil.seo.descripcion} precargarSaga>
   <Nav />
   <main id="contenido" tabindex="-1">
-    <section id="inicio" class="contenedor capa-contenido prueba">
-      <p class="etiqueta">{perfil.hero.etiqueta}</p>
-      <h1 class="saga">{perfil.nombre}</h1>
-      <p>
-        <a class="boton boton--primario" href="#misiones">
-          {perfil.hero.botonPrincipal}
-        </a>
-      </p>
-    </section>
-    {(['historia', 'entrenamiento', 'misiones', 'contacto'] as const).map((id) => (
-      <section id={id} class="contenedor capa-contenido prueba">
-        <h2 class="titulo">{perfil.secciones[id].titulo}</h2>
-        <ul class="lista-chips">
-          <li class="chip">Java</li>
-          <li class="chip chip--entrenando">Angular</li>
-          <li class="chip chip--energia">React</li>
-        </ul>
-      </section>
-    ))}
+    <Hero />
+    <Historia />
+    <Entrenamiento />
+    <Contacto />
   </main>
+  <Footer anclaArriba="inicio" />
 </Base>
-
-<style>
-  /* Página de prueba de la nav y la energía: se reemplaza al armar las secciones. */
-  .prueba {
-    display: grid;
-    align-content: center;
-    gap: 24px;
-    min-height: 100vh;
-  }
-
-  .saga {
-    font-family: var(--font-saga);
-    font-size: clamp(38px, 7.4vw, 112px);
-    font-weight: 400;
-    color: var(--color-dorado);
-    text-transform: lowercase;
-  }
-
-  .titulo {
-    font-family: var(--font-titulo);
-    font-size: clamp(30px, 4.6vw, 66px);
-    color: var(--color-dorado);
-    text-transform: uppercase;
-  }
-</style>

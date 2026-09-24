@@ -1,0 +1,66 @@
+---
+import { perfil } from '../data/perfil';
+
+interface Props {
+  /** A dónde lleva "Volver arriba" (en la home, al inicio). */
+  anclaArriba?: string;
+}
+
+const { anclaArriba = 'contenido' } = Astro.props;
+// Año del build: el sitio es estático, se actualiza con cada publicación.
+const anio = new Date().getFullYear();
+---
+
+<footer class="pie">
+  <div class="contenedor pie__interior capa-contenido">
+    <p>
+      © {anio} {perfil.nombre}
+    </p>
+    <p>{perfil.footer.hechoEn}</p>
+    <ul class="pie__acciones">
+      <li>
+        <a class="pie__enlace" href={`#${anclaArriba}`}>
+          Volver arriba <span aria-hidden="true">↑</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .pie__interior {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+    padding-top: 26px;
+    padding-bottom: 48px;
+    border-top: 1px solid var(--borde-14);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--texto-78);
+  }
+
+  .pie__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Área de toque cómoda (≥ 24 px de alto) sin cambiar el tamaño del texto. */
+  .pie__enlace {
+    display: inline-block;
+    padding-block: 5px;
+    color: inherit;
+  }
+
+  .pie__enlace:hover {
+    color: var(--color-dorado);
+  }
+</style>

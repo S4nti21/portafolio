@@ -1,0 +1,163 @@
+---
+import { perfil } from '../data/perfil';
+import { ruta } from '../utils/rutas';
+import FondoSeccion from './FondoSeccion.astro';
+import Hoja from './Hoja.astro';
+
+const { hero, ubicacion } = perfil;
+const [nombre = perfil.nombre, ...apellidos] = perfil.nombre.split(' ');
+---
+
+<section id="inicio" class="hero" aria-labelledby="hero-titulo">
+  <FondoSeccion nombre="hero" prioridad />
+  <div class="hero__resplandor capa-fondo" aria-hidden="true"></div>
+
+  <div class="hero__contenido capa-contenido">
+    <p class="hero__etiqueta">{hero.etiqueta}</p>
+    <!-- El nombre va siempre en dos líneas: cambiar de fuente no mueve el layout. -->
+    <h1 id="hero-titulo" class="hero__nombre">
+      <span>{nombre}</span> <span>{apellidos.join(' ')}</span>
+    </h1>
+    <Hoja variante="hero" />
+    <p class="hero__rol">
+      <span class="hero__rol-parte">{perfil.rol}</span>
+      <span class="hero__rol-separador"> · </span>
+      <span class="hero__rol-parte">{perfil.tecnologias.join(' · ')}</span>
+    </p>
+    <p class="hero__bajada">{hero.bajada}</p>
+    <div class="hero__acciones">
+      <a class="boton boton--primario" href={ruta('/#misiones')}>
+        {hero.botonPrincipal}
+      </a>
+      <a class="boton" href={ruta('/#contacto')}>
+        {hero.botonSecundario}
+      </a>
+    </div>
+  </div>
+
+  <div class="hero__pie capa-contenido">
+    <span>{ubicacion.coordenadas}</span>
+    <span>
+      {hero.indicacionScroll} <span aria-hidden="true">↓</span>
+    </span>
+  </div>
+</section>
+
+<style>
+  /* Sin z-index propio: los fondos quedan debajo del campo estelar y el contenido encima. */
+  .hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: max(100vh, 720px);
+    min-height: max(100svh, 720px);
+    padding: var(--alto-nav) var(--margen-lateral) 0;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .hero__resplandor {
+    inset: auto -10% -30%;
+    height: 60%;
+    background: radial-gradient(50% 50% at 50% 50%, rgb(var(--accrgb) / 0.28), transparent 70%);
+  }
+
+  .hero__contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    max-width: 1100px;
+  }
+
+  .hero__etiqueta {
+    padding: 8px 14px;
+    border: 1px solid var(--borde-16);
+    border-radius: var(--radio-pildora);
+    background: var(--color-velo);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-texto);
+  }
+
+  .hero__nombre {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-saga);
+    font-size: clamp(38px, 7.4vw, 112px);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: 0.04em;
+    /* Star Jedi en minúsculas es la versión que se parece al logo. */
+    text-transform: lowercase;
+    color: var(--color-dorado);
+    text-shadow: 0 0 40px rgb(3 3 8 / 0.9);
+  }
+
+  /* En celulares, rol y tecnologías van en renglones separados (sin cortar "Software Jr."). */
+  .hero__rol {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(20px, 2vw, 26px);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .hero__rol-separador {
+    display: none;
+    white-space: pre;
+  }
+
+  .hero__bajada {
+    max-width: 44ch;
+    font-size: clamp(17px, 1.5vw, 20px);
+    font-style: italic;
+    line-height: 1.5;
+    text-wrap: balance;
+    color: var(--texto-88);
+  }
+
+  .hero__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 8px;
+  }
+
+  .hero__pie {
+    position: absolute;
+    right: var(--margen-lateral);
+    bottom: 24px;
+    left: var(--margen-lateral);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--texto-78);
+  }
+
+  @media (min-width: 30em) {
+    .hero__etiqueta {
+      font-size: 12px;
+      letter-spacing: 0.22em;
+    }
+  }
+
+  @media (min-width: 48em) {
+    .hero__rol {
+      display: block;
+    }
+
+    .hero__rol-separador {
+      display: inline;
+    }
+  }
+</style>
