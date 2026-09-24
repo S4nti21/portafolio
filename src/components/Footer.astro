@@ -1,12 +1,15 @@
 ---
 import { perfil } from '../data/perfil';
+import { ruta } from '../utils/rutas';
 
 interface Props {
   /** A dónde lleva "Volver arriba" (en la home, al inicio). */
   anclaArriba?: string;
+  /** Muestra "▶ Ver intro" (solo donde está el overlay de la intro, o sea en la home). */
+  conIntro?: boolean;
 }
 
-const { anclaArriba = 'contenido' } = Astro.props;
+const { anclaArriba = 'contenido', conIntro = false } = Astro.props;
 // Año del build: el sitio es estático, se actualiza con cada publicación.
 const anio = new Date().getFullYear();
 ---
@@ -18,6 +21,18 @@ const anio = new Date().getFullYear();
     </p>
     <p>{perfil.footer.hechoEn}</p>
     <ul class="pie__acciones">
+      {conIntro && (
+        <li>
+          <button type="button" class="pie__enlace pie__intro" data-ver-intro>
+            <span aria-hidden="true">▶</span> Ver intro
+          </button>
+        </li>
+      )}
+      <li>
+        <a class="pie__enlace" href={ruta('/intro/')}>
+          Intro sola <span aria-hidden="true">↗</span>
+        </a>
+      </li>
       <li>
         <a class="pie__enlace" href={`#${anclaArriba}`}>
           Volver arriba <span aria-hidden="true">↑</span>
@@ -62,5 +77,19 @@ const anio = new Date().getFullYear();
 
   .pie__enlace:hover {
     color: var(--color-dorado);
+  }
+
+  /* Botón con aspecto de link, en dorado como en la barra de v3. */
+  .pie__intro {
+    border: 0;
+    background: none;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: var(--color-dorado);
+  }
+
+  .pie__intro:hover {
+    color: var(--color-blanco);
   }
 </style>

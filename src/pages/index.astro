@@ -4,13 +4,29 @@ import Entrenamiento from '../components/Entrenamiento.astro';
 import Footer from '../components/Footer.astro';
 import Hero from '../components/Hero.astro';
 import Historia from '../components/Historia.astro';
+import Intro from '../components/Intro.astro';
 import Misiones from '../components/Misiones.astro';
 import Nav from '../components/Nav.astro';
 import { perfil } from '../data/perfil';
 import Base from '../layouts/Base.astro';
+import { CLAVE_INTRO_VISTA } from '../scripts/intro';
 ---
 
 <Base titulo={perfil.seo.titulo} descripcion={perfil.seo.descripcion} precargarSaga>
+  <Fragment slot="head">
+    <!-- Antes del primer pintado: la intro se abre sola una vez por sesión. -->
+    <script is:inline define:vars={{ CLAVE_INTRO_VISTA }}>
+      try {
+        if (!sessionStorage.getItem(CLAVE_INTRO_VISTA)) {
+          document.documentElement.dataset.intro = 'abierta';
+          sessionStorage.setItem(CLAVE_INTRO_VISTA, '1');
+        }
+      } catch {
+        // Sin sessionStorage no se puede saber si ya se vio: se saltea la intro automática.
+      }
+    </script>
+  </Fragment>
+
   <Nav />
   <main id="contenido" tabindex="-1">
     <Hero />
@@ -19,5 +35,6 @@ import Base from '../layouts/Base.astro';
     <Misiones />
     <Contacto />
   </main>
-  <Footer anclaArriba="inicio" />
+  <Footer anclaArriba="inicio" conIntro />
+  <Intro modo="superpuesta" />
 </Base>

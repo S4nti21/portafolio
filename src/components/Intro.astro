@@ -1,0 +1,327 @@
+---
+import { perfil } from '../data/perfil';
+import { ruta } from '../utils/rutas';
+
+interface Props {
+  /**
+   * - superpuesta: overlay de la home (se muestra una vez por sesión o con "▶ Ver intro").
+   * - sola: la página /intro.
+   */
+  modo: 'superpuesta' | 'sola';
+}
+
+const { modo } = Astro.props;
+const { intro } = perfil;
+const [nombre = perfil.nombre, ...apellidos] = perfil.nombre.split(' ');
+const esOverlay = modo === 'superpuesta';
+---
+
+<div
+  class:list={['intro', `intro--${modo}`]}
+  data-intro-modo={modo}
+  role={esOverlay ? 'dialog' : undefined}
+  aria-modal={esOverlay ? 'true' : undefined}
+  aria-label={esOverlay ? `Intro de ${perfil.nombre}` : undefined}
+>
+  <canvas
+    class="intro__cielo"
+    data-intro-cielo
+    data-nombre={perfil.nombre}
+    aria-hidden="true"
+  ></canvas>
+
+  <!-- Versión animada: línea azul, nombre que se aleja (en el canvas) y texto en perspectiva. -->
+  <div class="intro__animada">
+    <p class="intro__linea" data-intro-linea>
+      {intro.lineaInicial}
+    </p>
+    <p class="sr-only">{perfil.nombre}</p>
+    <div class="intro__perspectiva" data-intro-perspectiva>
+      <div class="intro__crawl" data-intro-crawl>
+        <p class="intro__episodio">{intro.episodio}</p>
+        <p class="intro__titulo-episodio">{intro.tituloEpisodio}</p>
+        {intro.parrafos.map((parrafo) => (
+          <p class="intro__parrafo">{parrafo}</p>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Versión estática para quien prefiere movimiento reducido (la elige el CSS). -->
+  <div class="intro__estatica">
+    <p class="intro__linea-estatica">{intro.lineaInicial}</p>
+    <p class="intro__nombre">
+      <span>{nombre}</span> <span>{apellidos.join(' ')}</span>
+    </p>
+    <p class="intro__resumen">{intro.resumenEstatico}</p>
+    {esOverlay ? (
+      <button type="button" class="intro__boton" data-intro-cerrar>
+        Entrar al portafolio
+      </button>
+    ) : (
+      <a class="intro__boton" href={ruta('/')}>
+        Entrar al portafolio
+      </a>
+    )}
+  </div>
+
+  {!esOverlay && (
+    <div class="intro__fin">
+      <p class="intro__fin-texto">Fin de la intro</p>
+      <div class="intro__fin-acciones">
+        <button type="button" class="intro__boton" data-intro-repetir>
+          Ver de nuevo
+        </button>
+        <a class="intro__boton intro__boton--secundario" href={ruta('/')}>
+          Ir al portafolio <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  )}
+
+  <button type="button" class="intro__saltar" data-intro-saltar>
+    Saltar intro <span aria-hidden="true">→</span>
+  </button>
+</div>
+
+<script>
+  import { iniciarIntro } from '../scripts/intro';
+
+  iniciarIntro();
+</script>
+
+<style>
+  .intro {
+    position: fixed;
+    inset: 0;
+    z-index: var(--capa-intro);
+    overflow: hidden;
+    background: var(--color-fondo);
+    color: var(--color-dorado);
+    font-family: var(--font-cuerpo);
+    container-type: size;
+  }
+
+  /* El overlay solo se ve cuando <html data-intro="abierta"> (y bloquea el scroll). */
+  .intro--superpuesta {
+    display: none;
+  }
+
+  :global(html[data-intro='abierta']) {
+    overflow: hidden;
+  }
+
+  :global(html[data-intro='abierta']) .intro--superpuesta {
+    display: block;
+  }
+
+  .intro__cielo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .intro__linea {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(720px, 84cqi);
+    font-size: clamp(22px, 3.4cqi, 40px);
+    line-height: 1.35;
+    text-align: center;
+    color: var(--color-intro);
+    opacity: 0;
+    transform: translate(-50%, -50%);
+  }
+
+  .intro__perspectiva {
+    position: absolute;
+    inset: 0;
+    perspective: 400px;
+    perspective-origin: 50% 20%;
+    -webkit-mask-image: linear-gradient(to top, #000 55%, transparent 92%);
+    mask-image: linear-gradient(to top, #000 55%, transparent 92%);
+  }
+
+  .intro__crawl {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: min(760px, 88cqi);
+    /* Casi 0 y fuera de pantalla: ver OPACIDAD_MINIMA_CRAWL en src/scripts/intro.ts. */
+    opacity: 0.01;
+    transform: translateX(-50%);
+    transform-origin: 50% 0;
+  }
+
+  .intro__episodio {
+    font-size: clamp(22px, 3.4cqi, 40px);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .intro__titulo-episodio {
+    margin: 16px 0 48px;
+    font-family: var(--font-titulo);
+    font-size: clamp(28px, 5cqi, 64px);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .intro__parrafo {
+    font-size: clamp(24px, 3.8cqi, 46px);
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: justify;
+    /* Corta palabras con guion (en español) para que el justificado no deje huecos. */
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+
+  .intro__parrafo + .intro__parrafo {
+    margin-top: 36px;
+  }
+
+  /* Estados: animada por defecto, estática con movimiento reducido, fin en /intro. */
+  .intro__estatica,
+  .intro__fin {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .intro__animada {
+      display: none;
+    }
+
+    .intro__estatica {
+      display: flex;
+    }
+  }
+
+  .intro[data-terminada] .intro__animada,
+  .intro[data-terminada] .intro__estatica,
+  .intro[data-terminada] .intro__saltar {
+    display: none;
+  }
+
+  .intro[data-terminada] .intro__fin {
+    display: flex;
+  }
+
+  .intro__estatica {
+    gap: 28px;
+    padding: 40px 24px;
+  }
+
+  .intro__linea-estatica {
+    font-size: clamp(18px, 2.4cqi, 26px);
+    color: var(--color-intro);
+  }
+
+  .intro__nombre {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-saga);
+    font-size: clamp(36px, 7cqi, 96px);
+    line-height: 1;
+    letter-spacing: 0.06em;
+    text-transform: lowercase;
+  }
+
+  .intro__resumen {
+    max-width: 640px;
+    font-size: clamp(17px, 2cqi, 22px);
+    font-weight: 600;
+    line-height: 1.6;
+  }
+
+  .intro__fin {
+    gap: 24px;
+    padding: 24px;
+  }
+
+  .intro__fin-texto {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--texto-75);
+  }
+
+  .intro__fin-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .intro__boton {
+    padding: 15px 26px;
+    border: 2px solid var(--color-dorado);
+    border-radius: var(--radio-pildora);
+    background: rgb(255 200 61 / 0.1);
+    color: var(--color-blanco);
+    font-family: var(--font-cuerpo);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition:
+      background-color 0.25s,
+      box-shadow 0.25s;
+  }
+
+  .intro__estatica .intro__boton {
+    margin-top: 8px;
+    padding: 16px 30px;
+    font-size: 14px;
+  }
+
+  .intro__boton:hover,
+  .intro__boton:focus-visible {
+    background: rgb(255 200 61 / 0.22);
+    box-shadow: 0 0 24px rgb(255 200 61 / 0.35);
+    color: var(--color-blanco);
+  }
+
+  .intro__boton--secundario {
+    border-color: rgb(243 238 231 / 0.35);
+    background: transparent;
+  }
+
+  .intro__saltar {
+    position: absolute;
+    right: clamp(16px, 4cqi, 48px);
+    bottom: clamp(20px, 4cqh, 40px);
+    z-index: 5;
+    padding: 13px 20px;
+    border: 1px solid rgb(243 238 231 / 0.5);
+    border-radius: var(--radio-pildora);
+    background: rgb(3 3 8 / 0.75);
+    color: var(--color-texto);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transition:
+      border-color 0.25s,
+      color 0.25s;
+  }
+
+  .intro__saltar:hover,
+  .intro__saltar:focus-visible {
+    border-color: var(--color-dorado);
+    color: var(--color-dorado);
+  }
+</style>

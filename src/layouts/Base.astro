@@ -14,9 +14,17 @@ interface Props {
   precargarSaga?: boolean;
   /** Campo estelar de fondo (la intro sola tiene el suyo propio). */
   estrellas?: boolean;
+  /** false agrega noindex (para páginas que no aportan a los buscadores). */
+  indexable?: boolean;
 }
 
-const { titulo, descripcion, precargarSaga = false, estrellas = true } = Astro.props;
+const {
+  titulo,
+  descripcion,
+  precargarSaga = false,
+  estrellas = true,
+  indexable = true,
+} = Astro.props;
 const idsEnergia = ENERGIAS.map((energia) => energia.id);
 ---
 
@@ -29,6 +37,7 @@ const idsEnergia = ENERGIAS.map((energia) => energia.id);
     <meta name="theme-color" content="#030308" />
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
+    {!indexable && <meta name="robots" content="noindex" />}
 
     <!--
       Antes del primer pintado: marca que hay JS y aplica la energía guardada,

@@ -1,0 +1,18 @@
+---
+import Intro from '../components/Intro.astro';
+import { perfil } from '../data/perfil';
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  titulo={`Intro · ${perfil.nombre}`}
+  descripcion={`${perfil.intro.episodio}: ${perfil.intro.tituloEpisodio}. La intro del portafolio de ${perfil.nombre}.`}
+  precargarSaga
+  estrellas={false}
+  indexable={false}
+>
+  <main id="contenido" tabindex="-1">
+    <h1 class="sr-only">Intro del portafolio de {perfil.nombre}</h1>
+    <Intro modo="sola" />
+  </main>
+</Base>
