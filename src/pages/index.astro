@@ -1,38 +1,41 @@
 ---
+import Nav from '../components/Nav.astro';
+import { perfil } from '../data/perfil';
 import Base from '../layouts/Base.astro';
 ---
 
-<Base
-  titulo="Santiago Weidmann · Desarrollador de Software Jr."
-  descripcion="Portafolio de Santiago Weidmann, desarrollador de software Jr. en Santa Fe, Argentina."
-  precargarSaga
->
-  <main id="contenido" tabindex="-1" class="contenedor capa-contenido prueba">
-    <p class="etiqueta">Santa Fe · Episodio I de mi carrera</p>
-    <h1 class="saga">Santiago Weidmann</h1>
-    <p class="saga saga--mayus">Santiago Weidmann</p>
-    <h2 class="titulo">Mi historia</h2>
-    <p class="cuerpo">Construyo aplicaciones web de punta a punta.</p>
-    <p class="cuerpo italica">Del backend en Java y Spring al frontend en React.</p>
-    <p>
-      <a class="boton boton--primario" href="#contenido">
-        Ver misiones
-      </a>
-    </p>
-    <ul class="lista-chips">
-      <li class="chip">Java</li>
-      <li class="chip chip--entrenando">Angular</li>
-      <li class="chip chip--energia">React</li>
-    </ul>
+<Base titulo={perfil.seo.titulo} descripcion={perfil.seo.descripcion} precargarSaga>
+  <Nav />
+  <main id="contenido" tabindex="-1">
+    <section id="inicio" class="contenedor capa-contenido prueba">
+      <p class="etiqueta">{perfil.hero.etiqueta}</p>
+      <h1 class="saga">{perfil.nombre}</h1>
+      <p>
+        <a class="boton boton--primario" href="#misiones">
+          {perfil.hero.botonPrincipal}
+        </a>
+      </p>
+    </section>
+    {(['historia', 'entrenamiento', 'misiones', 'contacto'] as const).map((id) => (
+      <section id={id} class="contenedor capa-contenido prueba">
+        <h2 class="titulo">{perfil.secciones[id].titulo}</h2>
+        <ul class="lista-chips">
+          <li class="chip">Java</li>
+          <li class="chip chip--entrenando">Angular</li>
+          <li class="chip chip--energia">React</li>
+        </ul>
+      </section>
+    ))}
   </main>
 </Base>
 
 <style>
-  /* Página de prueba de tokens y fuentes: se reemplaza al armar las secciones. */
+  /* Página de prueba de la nav y la energía: se reemplaza al armar las secciones. */
   .prueba {
     display: grid;
+    align-content: center;
     gap: 24px;
-    padding-block: 120px;
+    min-height: 100vh;
   }
 
   .saga {
@@ -43,18 +46,10 @@ import Base from '../layouts/Base.astro';
     text-transform: lowercase;
   }
 
-  .saga--mayus {
-    text-transform: uppercase;
-  }
-
   .titulo {
     font-family: var(--font-titulo);
     font-size: clamp(30px, 4.6vw, 66px);
     color: var(--color-dorado);
     text-transform: uppercase;
-  }
-
-  .italica {
-    font-style: italic;
   }
 </style>

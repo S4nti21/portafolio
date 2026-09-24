@@ -1,0 +1,131 @@
+---
+import { ENERGIA_POR_DEFECTO, ENERGIAS } from '../data/energias';
+---
+
+<!--
+  Radios nativos agrupados: Tab entra al grupo, las flechas cambian de color.
+  El anillo del color activo sale del atributo data-energia de <html>, así no parpadea.
+-->
+<div class="energia" role="radiogroup" aria-label="Color de energía" data-selector-energia>
+  <span class="energia__titulo" aria-hidden="true">
+    Energía
+  </span>
+  {ENERGIAS.map((energia) => (
+    <label class="energia__opcion" data-opcion={energia.id} title={energia.etiqueta}>
+      <input
+        class="energia__radio"
+        type="radio"
+        name="energia"
+        value={energia.id}
+        checked={energia.id === ENERGIA_POR_DEFECTO}
+        aria-label={energia.etiqueta}
+      />
+      <span class="energia__punto" aria-hidden="true" />
+    </label>
+  ))}
+</div>
+
+<script>
+  import { iniciarSelectorEnergia } from '../scripts/energia';
+
+  iniciarSelectorEnergia();
+</script>
+
+<style>
+  .energia {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px 4px 12px;
+    border: 1px solid var(--borde-16);
+    border-radius: var(--radio-pildora);
+    background: var(--color-velo);
+  }
+
+  /* Sin JS el selector no puede funcionar: mejor no mostrarlo. */
+  :global(html:not(.js)) .energia {
+    display: none;
+  }
+
+  .energia__titulo {
+    display: none;
+    margin-right: 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--texto-75);
+  }
+
+  @media (min-width: 75em) {
+    .energia__titulo {
+      display: inline;
+    }
+  }
+
+  .energia__opcion {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+
+  .energia__opcion[data-opcion='rojo'] {
+    --punto: var(--energia-rojo);
+  }
+
+  .energia__opcion[data-opcion='azul'] {
+    --punto: var(--energia-azul);
+  }
+
+  .energia__opcion[data-opcion='verde'] {
+    --punto: var(--energia-verde);
+  }
+
+  .energia__opcion[data-opcion='violeta'] {
+    --punto: var(--energia-violeta);
+  }
+
+  /* El radio cubre toda el área táctil (32×32) y es invisible salvo por el foco. */
+  .energia__radio {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    border-radius: 50%;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .energia__radio:focus-visible {
+    outline: 2px solid var(--color-dorado);
+    outline-offset: 0;
+  }
+
+  .energia__punto {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--color-blanco);
+    box-shadow:
+      0 0 3px 1px var(--punto),
+      0 0 10px 3px var(--punto);
+    outline: 1.5px solid transparent;
+    outline-offset: 4px;
+    pointer-events: none;
+    transition:
+      box-shadow 0.3s,
+      outline-color 0.3s;
+  }
+
+  /* Anillo claro en la energía activa (azul si todavía no se eligió ninguna). */
+  :global(:root:not([data-energia])) .energia__opcion[data-opcion='azul'] .energia__punto,
+  :global(:root[data-energia='azul']) .energia__opcion[data-opcion='azul'] .energia__punto,
+  :global(:root[data-energia='rojo']) .energia__opcion[data-opcion='rojo'] .energia__punto,
+  :global(:root[data-energia='verde']) .energia__opcion[data-opcion='verde'] .energia__punto,
+  :global(:root[data-energia='violeta']) .energia__opcion[data-opcion='violeta'] .energia__punto {
+    outline-color: rgb(243 238 231 / 0.85);
+  }
+</style>

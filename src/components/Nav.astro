@@ -1,0 +1,107 @@
+---
+import { perfil, type IdSeccion } from '../data/perfil';
+import { ruta } from '../utils/rutas';
+import SelectorEnergia from './SelectorEnergia.astro';
+
+const [nombre = perfil.nombre, ...apellidos] = perfil.nombre.split(' ');
+const enlaces = Object.entries(perfil.secciones) as [
+  IdSeccion,
+  (typeof perfil.secciones)[IdSeccion],
+][];
+---
+
+<header class="barra">
+  <a class="marca" href={ruta('/#inicio')}>
+    <span>{nombre}</span> <span>{apellidos.join(' ')}</span>
+  </a>
+
+  <div class="barra__derecha">
+    <nav class="barra__nav" aria-label="Secciones">
+      <ul class="barra__lista">
+        {enlaces.map(([id, seccion]) => (
+          <li>
+            <a class="barra__enlace" href={ruta(`/#${id}`)}>
+              {seccion.enlace}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <SelectorEnergia />
+  </div>
+</header>
+
+<style>
+  .barra {
+    position: sticky;
+    top: 0;
+    z-index: var(--capa-nav);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: var(--alto-nav);
+    margin-bottom: calc(-1 * var(--alto-nav));
+    padding: 0 clamp(18px, 5vw, 72px);
+    border-bottom: 1px solid var(--borde-10);
+    background: rgb(3 3 8 / 0.72);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+
+  /* En celulares angostos el nombre va en dos líneas para dejar lugar al selector. */
+  .marca {
+    display: inline-flex;
+    flex-direction: column;
+    font-family: var(--font-titulo);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-dorado);
+  }
+
+  @media (min-width: 30em) {
+    .marca {
+      display: inline;
+    }
+  }
+
+  .barra__derecha {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 2.4vw, 36px);
+  }
+
+  /* En pantallas chicas el diseño muestra solo el nombre y la energía. */
+  .barra__nav {
+    display: none;
+  }
+
+  @media (min-width: 64em) {
+    .barra__nav {
+      display: block;
+    }
+  }
+
+  .barra__lista {
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 2vw, 28px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .barra__enlace {
+    display: block;
+    padding-block: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+</style>
