@@ -1,5 +1,6 @@
 ---
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import { getImage } from 'astro:assets';
 import { render } from 'astro:content';
 import Footer from '../../components/Footer.astro';
 import Hoja from '../../components/Hoja.astro';
@@ -7,7 +8,7 @@ import Nav from '../../components/Nav.astro';
 import PortadaMision from '../../components/PortadaMision.astro';
 import { perfil } from '../../data/perfil';
 import Base from '../../layouts/Base.astro';
-import { numeroMision, obtenerMisiones } from '../../utils/misiones';
+import { altImagen, numeroMision, obtenerMisiones } from '../../utils/misiones';
 import { ruta } from '../../utils/rutas';
 
 export const getStaticPaths = (async () => {
@@ -28,6 +29,10 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 const { mision, numero, anterior, siguiente } = Astro.props;
 const { data } = mision;
 const { Content } = await render(mision);
+// Para redes: la imagen de la misión recortada a 1200×630 (si no tiene, se usa /og.png).
+const imagenRedes = data.imagen
+  ? await getImage({ src: data.imagen, width: 1200, height: 630, fit: 'cover', format: 'jpeg' })
+  : undefined;
 
 const enlaces = [
   { texto: 'Ver repositorio', url: data.repo },
@@ -35,7 +40,13 @@ const enlaces = [
 ].filter((enlace): enlace is { texto: string; url: string } => Boolean(enlace.url));
 ---
 
-<Base titulo={`${data.codigo} — ${data.titulo} · ${perfil.nombre}`} descripcion={data.resumen}>
+<Base
+  titulo={`${data.codigo} — ${data.titulo} · ${perfil.nombre}`}
+  descripcion={data.resumen}
+  tipo="article"
+  imagen={imagenRedes?.src}
+  imagenAlt={data.imagen ? altImagen(mision) : undefined}
+>
   <Nav />
   <main id="contenido" tabindex="-1">
     <article class="contenedor caso capa-contenido" aria-labelledby="caso-titulo">

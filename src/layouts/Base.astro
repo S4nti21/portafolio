@@ -1,6 +1,7 @@
 ---
 import { Font } from 'astro:assets';
 import CampoEstelar from '../components/CampoEstelar.astro';
+import Seo from '../components/Seo.astro';
 import { CLAVE_ENERGIA, ENERGIAS } from '../data/energias';
 import '../styles/tokens.css';
 import '../styles/global.css';
@@ -10,6 +11,12 @@ interface Props {
   titulo: string;
   /** Descripción para buscadores y redes. */
   descripcion: string;
+  /** Imagen para redes (por defecto, /og.png) y su texto alternativo. */
+  imagen?: string;
+  imagenAlt?: string;
+  tipo?: 'website' | 'article';
+  /** Datos estructurados (schema.org) para buscadores. */
+  datosEstructurados?: Record<string, unknown>;
   /** Precarga Star Jedi: solo donde se ve en el primer pantallazo (home e intro). */
   precargarSaga?: boolean;
   /** Campo estelar de fondo (la intro sola tiene el suyo propio). */
@@ -21,6 +28,10 @@ interface Props {
 const {
   titulo,
   descripcion,
+  imagen,
+  imagenAlt,
+  tipo,
+  datosEstructurados,
   precargarSaga = false,
   estrellas = true,
   indexable = true,
@@ -35,9 +46,6 @@ const idsEnergia = ENERGIAS.map((energia) => energia.id);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#030308" />
-    <title>{titulo}</title>
-    <meta name="description" content={descripcion} />
-    {!indexable && <meta name="robots" content="noindex" />}
 
     <!--
       Antes del primer pintado: marca que hay JS y aplica la energía guardada,
@@ -55,12 +63,22 @@ const idsEnergia = ENERGIAS.map((energia) => energia.id);
         // Sin acceso a localStorage (modo privado estricto): queda la energía por defecto.
       }
     </script>
+    <slot name="head" />
+
     <Font cssVariable="--font-syncopate" preload />
     <Font cssVariable="--font-archivo" preload={[{ weight: '600', style: 'normal' }]} />
     <Font cssVariable="--font-jetbrains-mono" preload />
     <Font cssVariable="--font-star-jedi" preload={precargarSaga} />
 
-    <slot name="head" />
+    <Seo
+      titulo={titulo}
+      descripcion={descripcion}
+      imagen={imagen}
+      imagenAlt={imagenAlt}
+      tipo={tipo}
+      indexable={indexable}
+      datosEstructurados={datosEstructurados}
+    />
   </head>
   <body>
     <a class="salto" href="#contenido">

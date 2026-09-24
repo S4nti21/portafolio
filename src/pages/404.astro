@@ -1,0 +1,93 @@
+---
+import Footer from '../components/Footer.astro';
+import Hoja from '../components/Hoja.astro';
+import Nav from '../components/Nav.astro';
+import { perfil } from '../data/perfil';
+import Base from '../layouts/Base.astro';
+import { ruta } from '../utils/rutas';
+---
+
+<Base
+  titulo={`Página no encontrada · ${perfil.nombre}`}
+  descripcion="Esta no es la página que estás buscando. Volvé a la base para seguir explorando el portafolio."
+  indexable={false}
+>
+  <Nav />
+  <main id="contenido" tabindex="-1" class="error">
+    <div class="contenedor capa-contenido error__interior">
+      <Hoja />
+      <p class="error__codigo">
+        <span class="error__numero">404</span>
+        <span>Sector desconocido</span>
+      </p>
+      <h1 class="error__titulo">Esta no es la página que estás buscando.</h1>
+      <p class="error__texto">
+        La ruta se perdió en el hiperespacio. Volvé a la base y seguí explorando.
+      </p>
+      <div class="error__acciones">
+        <a class="boton boton--primario" href={ruta('/')}>
+          Volver a la base
+        </a>
+        <a class="boton" href={ruta('/#misiones')}>
+          Ver misiones
+        </a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .error {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-block: calc(var(--alto-nav) + 48px) 64px;
+  }
+
+  .error__interior {
+    flex: 1;
+  }
+
+  .error__codigo {
+    display: flex;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .error__numero {
+    color: var(--acc);
+  }
+
+  .error__titulo {
+    max-width: 18ch;
+    margin-top: 18px;
+    font-family: var(--font-titulo);
+    font-size: clamp(30px, 5vw, 72px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    color: var(--color-dorado);
+  }
+
+  .error__texto {
+    max-width: 48ch;
+    margin-top: 24px;
+    font-size: clamp(18px, 1.8vw, 22px);
+    line-height: 1.5;
+    color: var(--texto-88);
+  }
+
+  .error__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 40px;
+  }
+</style>

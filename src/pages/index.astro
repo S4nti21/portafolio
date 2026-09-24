@@ -1,4 +1,6 @@
 ---
+import { getImage } from 'astro:assets';
+import foto from '../assets/foto-perfil.webp';
 import Contacto from '../components/Contacto.astro';
 import Entrenamiento from '../components/Entrenamiento.astro';
 import Footer from '../components/Footer.astro';
@@ -10,9 +12,37 @@ import Nav from '../components/Nav.astro';
 import { perfil } from '../data/perfil';
 import Base from '../layouts/Base.astro';
 import { CLAVE_INTRO_VISTA } from '../scripts/intro';
+import { ruta } from '../utils/rutas';
+
+// Datos estructurados para buscadores (schema.org/Person).
+const sitio = Astro.site ?? Astro.url;
+const fotoSeo = await getImage({ src: foto, width: 440, format: 'webp' });
+const persona = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: perfil.nombre,
+  jobTitle: perfil.rol,
+  description: perfil.seo.descripcion,
+  url: new URL(ruta('/'), sitio).href,
+  image: new URL(fotoSeo.src, sitio).href,
+  email: `mailto:${perfil.contacto.email}`,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: perfil.ubicacion.ciudad,
+    addressRegion: perfil.ubicacion.region,
+    addressCountry: perfil.ubicacion.codigoPais,
+  },
+  sameAs: [perfil.contacto.linkedin, perfil.contacto.github],
+  knowsAbout: perfil.entrenamiento.niveles.flatMap((nivel) => nivel.habilidades),
+};
 ---
 
-<Base titulo={perfil.seo.titulo} descripcion={perfil.seo.descripcion} precargarSaga>
+<Base
+  titulo={perfil.seo.titulo}
+  descripcion={perfil.seo.descripcion}
+  datosEstructurados={persona}
+  precargarSaga
+>
   <Fragment slot="head">
     <!-- Antes del primer pintado: la intro se abre sola una vez por sesión. -->
     <script is:inline define:vars={{ CLAVE_INTRO_VISTA }}>
