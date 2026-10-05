@@ -16,7 +16,7 @@ const idTitulo = `mision-${mision.id}`;
 
 <article class="mision" aria-labelledby={idTitulo}>
   <div class="mision__portada">
-    <PortadaMision mision={mision} sizes="(min-width: 64em) min(648px, 50vw), 100vw" />
+    <PortadaMision mision={mision} sizes="(min-width: 64em) min(648px, 50vw), 100vw" entera />
   </div>
 
   <div class="mision__cuerpo">
@@ -78,6 +78,7 @@ const idTitulo = `mision-${mision.id}`;
 
   .mision__portada {
     position: relative;
+    overflow: hidden;
     min-height: clamp(230px, 26vw, 420px);
     background: var(--color-panel-imagen);
   }

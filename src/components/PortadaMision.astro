@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { getImage, Image } from 'astro:assets';
 import { altImagen, type Mision } from '../utils/misiones';
 
 interface Props {
@@ -8,25 +8,41 @@ interface Props {
   sizes: string;
   /** Carga inmediata (cuando la portada se ve apenas entra la página). */
   prioridad?: boolean;
+  /**
+   * Muestra la imagen completa, sin recortar. El espacio que sobra se rellena con la
+   * misma imagen, difuminada y oscurecida.
+   */
+  entera?: boolean;
 }
 
-const { mision, sizes, prioridad = false } = Astro.props;
+const { mision, sizes, prioridad = false, entera = false } = Astro.props;
 const { imagen, codigo } = mision.data;
 // Anchos a generar: nunca más grandes que el original (Astro no agranda imágenes).
 const anchos = imagen
   ? [...[480, 720, 960, 1296].filter((ancho) => ancho < imagen.width), imagen.width]
   : [];
+// Para el relleno alcanza una versión chica: el desenfoque borra el detalle.
+const relleno = imagen && entera ? await getImage({ src: imagen, width: 480 }) : undefined;
 ---
 
 {imagen ? (
-  <Image
-    class="portada__imagen"
-    src={imagen}
-    alt={altImagen(mision)}
-    widths={anchos}
-    sizes={sizes}
-    priority={prioridad}
-  />
+  <>
+    {relleno && (
+      <div
+        class="portada__relleno"
+        style={`background-image: url('${relleno.src}')`}
+        aria-hidden="true"
+      />
+    )}
+    <Image
+      class={entera ? 'portada__imagen portada__imagen--entera' : 'portada__imagen'}
+      src={imagen}
+      alt={altImagen(mision)}
+      widths={anchos}
+      sizes={sizes}
+      priority={prioridad}
+    />
+  </>
 ) : (
   <div class="portada__vacia" aria-hidden="true">
     <span class="portada__codigo">{codigo}</span>
@@ -44,6 +60,20 @@ const anchos = imagen
 
   .portada__imagen {
     object-fit: cover;
+  }
+
+  .portada__imagen--entera {
+    object-fit: contain;
+  }
+
+  /* Relleno del modo "entera". Va agrandado para que los bordes, que el desenfoque aclara, queden afuera. */
+  .portada__relleno {
+    position: absolute;
+    inset: 0;
+    background-position: center;
+    background-size: cover;
+    filter: blur(24px) brightness(0.3) saturate(1.2);
+    transform: scale(1.15);
   }
 
   /* Sin imagen: el nombre en clave en contorno, con el brillo de la energía activa. */

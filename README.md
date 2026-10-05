@@ -113,13 +113,13 @@ imagenAlt: 'Pantalla principal de la app con el listado de turnos'
 ```
 
 - Formato recomendado: horizontal 16:9, de al menos 1600 × 900 px, en JPG, PNG, WebP o AVIF.
-- Astro la optimiza y genera varios tamaños. En la tarjeta se recorta al centro.
+- Si la imagen es vertical, por ejemplo un celular, agregale a los costados el mismo fondo hasta llegar a 1,9:1 (por ejemplo, 2194 × 1152). Así se ve entera en la página de la misión y al compartirla en redes. Si la usás vertical, en la página de la misión se recorta casi entera.
+- Sin transparencia: en la tarjeta, lo transparente deja ver el fondo difuminado. Un logo con fondo transparente conviene ponerlo sobre un fondo oscuro, como en `atupuerta.jpg`.
+- Astro la optimiza y genera varios tamaños. En la tarjeta se ve entera, sobre un fondo hecho con la misma imagen difuminada. En la página de la misión se recorta a 16:9.
 - La misma imagen se usa para compartir la misión en redes.
 - Sin imagen, se muestra el nombre en clave con el brillo del color de energía.
 
 Si un campo falta o tiene un formato inválido, `npm run dev` y `npm run build` muestran el error con el archivo y el campo.
-
-> Las tres misiones de ejemplo (`orbita.md`, `faro.md` y `nebula.md`) tienen textos `[Completar]`. Reemplazalos con tus proyectos reales o borrá los archivos.
 
 ## Cambiar fondos
 
