@@ -4,7 +4,7 @@ Portafolio personal de **Santiago Weidmann**, desarrollador de software Jr. (Jav
 
 - **Sitio estático** con [Astro](https://astro.build) 7 y TypeScript en modo estricto.
 - **CSS propio** con custom properties, sin frameworks de UI ni librerías de animación.
-- **JavaScript solo donde hace falta**: el campo estelar, la intro, el selector de energía y el encendido de las hojas.
+- **JavaScript solo donde hace falta**: el campo estelar, la intro, el selector de energía, el encendido de las hojas y el personaje de Contacto.
 - **Accesible**:
   - Se usa entero con teclado y tiene contraste AA.
   - Respeta "reducir movimiento".
@@ -43,9 +43,9 @@ Abrí <http://localhost:4321>. Los cambios se ven al instante.
 src/
 ├─ data/perfil.ts       ← tus datos y todos los textos del sitio
 ├─ content/misiones/    ← una misión (proyecto) por archivo .md
-├─ assets/              ← foto, fondos opcionales, imágenes de misiones y la fuente Star Jedi
+├─ assets/              ← foto, fondos opcionales, imágenes de misiones, personajes y la fuente Star Jedi
 ├─ components/          ← secciones y piezas de la interfaz
-├─ scripts/             ← campo estelar, intro, energía y hojas (TypeScript)
+├─ scripts/             ← campo estelar, intro, energía, hojas y personaje (TypeScript)
 ├─ styles/              ← tokens.css (colores, fuentes y medidas) y global.css
 ├─ layouts/Base.astro   ← <head>, fuentes, SEO y fondo de estrellas
 └─ pages/               ← inicio, /intro, /misiones/[slug], 404 y robots.txt
@@ -132,6 +132,25 @@ El inicio, Entrenamiento y Contacto aceptan una imagen de fondo opcional. Para a
 - **Qué imagen usar**: oscura y de al menos 1920 px de ancho.
 - Si agregás el archivo con `npm run dev` corriendo y no aparece, reinicialo.
 
+## Personajes de Contacto
+
+En pantallas de 1200 px o más, a la derecha de Contacto aparece un personaje animado que cambia con el color de energía: Darth Vader con la roja, Obi-Wan Kenobi con la azul, Yoda con la verde y Mace Windu con la violeta.
+
+Cada uno es un archivo de `src/assets/personajes/` con el nombre de la energía: `rojo.webp`, `azul.webp`, `verde.webp` y `violeta.webp`. Para cambiar un personaje, reemplazá su archivo.
+
+- **Qué pasa sola**:
+  - `src/utils/personajes.ts` detecta el archivo y Astro genera dos versiones livianas, de 708 y 944 px de alto.
+  - El navegador descarga solo el personaje de la energía activa, cuando la sección se acerca a la pantalla. En celulares y tablets no se muestra ni se descarga.
+  - Al cambiar de energía, el personaje se desvanece y aparece el del nuevo color.
+  - Sin archivo, esa energía no muestra personaje. Para sacar uno, borrá el archivo.
+  - Con "reducir movimiento" se ve un cuadro quieto.
+- **Qué imagen usar**:
+  - WebP animado con fondo transparente, de 1180 px de alto.
+  - De ancho, lo que ocupe el personaje: Vader mide 630 y Obi-Wan, con el sable extendido, 800. No pases de 800: lo que pasa de 700 se extiende hacia la izquierda, sobre el espacio libre que queda hasta el texto. Si necesita más, achicalo.
+  - Los pies a la misma altura que los demás, a unos 56 px del borde de abajo del lienzo, y una escala parecida, para que el cambio de color no salte. Yoda es la excepción: está saltando, así que flota un poco más arriba.
+  - Un loop corto, como los 4 s del de Vader. Cuanto más largo, más pesa.
+- La primera vez que se pide con `npm run dev`, puede tardar unos segundos en aparecer, porque Astro la procesa en ese momento. Si agregás el archivo con `npm run dev` corriendo y no aparece, reinicialo.
+
 ## Cambiar fuentes
 
 Las fuentes se autoalojan con la [Fonts API de Astro](https://docs.astro.build/en/guides/fonts/):
@@ -188,3 +207,4 @@ Otros detalles:
 - **Syncopate, Archivo y JetBrains Mono**: licencia SIL Open Font License, vía Fontsource.
 - **Star Jedi**: © 1998 Boba Fonts (Davide Canavero), distribuida como freeware para uso personal. Si el sitio pasara a tener uso comercial, revisá la licencia o cambiala por otra fuente.
 - **Star Wars**: es una marca registrada de Lucasfilm Ltd. Este es un proyecto personal sin fines comerciales, inspirado en la saga.
+- **Personajes de Contacto**: Darth Vader, Obi-Wan Kenobi, Yoda, Mace Windu y los demás personajes de la saga son propiedad de Lucasfilm Ltd. Si el sitio pasara a tener uso comercial, reemplazalos por imágenes propias o con licencia.

@@ -1,0 +1,90 @@
+---
+import { Image } from 'astro:assets';
+import { obtenerPersonajes } from '../utils/personajes';
+
+/*
+ * Personaje de la energía activa (rojo → Darth Vader, azul → Obi-Wan, verde → Yoda, violeta →
+ * Mace Windu), abajo a la derecha de Contacto. Cada imagen espera en un <template>, así el
+ * navegador no descarga ninguna de entrada: src/scripts/personaje.ts inserta la que
+ * corresponde cuando la sección se acerca.
+ *
+ * Las versiones van por alto (708 px, y 944 para pantallas densas), así todos tienen la misma
+ * resolución: las de un lienzo de 700 × 1180 miden 420 y 560 de ancho, y las de otro ancho
+ * salen proporcionales. Astro calcula el ancho: si se leyeran acá las medidas de la imagen,
+ * lo tomaría como un uso del original y lo copiaría entero al sitio.
+ */
+const personajes = obtenerPersonajes();
+---
+
+{personajes.length > 0 && (
+  <div class="personaje" data-personaje aria-hidden="true">
+    {personajes.map(({ energia, imagen }) => (
+      <template data-energia={energia}>
+        <Image
+          class="personaje__pieza"
+          src={imagen}
+          alt=""
+          height={708}
+          densities={[1, 4 / 3]}
+          quality={72}
+          loading="eager"
+        />
+      </template>
+    ))}
+  </div>
+)}
+
+<script>
+  import { iniciarPersonaje } from '../scripts/personaje';
+
+  iniciarPersonaje();
+</script>
+
+<style>
+  /* Solo en pantallas anchas, donde Contacto tiene lugar a la derecha del texto. */
+  .personaje {
+    display: none;
+  }
+
+  /*
+   * Parado sobre la línea del pie. El tamaño lo define Contacto (--alto-personaje y
+   * --ancho-personaje); max-height lo mantiene por debajo de la hoja de la sección.
+   */
+  @media (min-width: 75em) {
+    .personaje {
+      position: absolute;
+      right: var(--margen-lateral);
+      bottom: 0;
+      display: block;
+      width: var(--ancho-personaje);
+      height: var(--alto-personaje);
+      max-height: calc(100% - var(--espacio-seccion) - 72px);
+      pointer-events: none;
+    }
+  }
+
+  /*
+   * La imagen animada o, con movimiento reducido, el canvas con el cuadro quieto. Ocupa el
+   * alto del escenario y se apoya abajo a la derecha: un personaje más ancho que el lienzo de
+   * referencia (Obi-Wan, con el sable extendido) se extiende hacia la izquierda, sobre el
+   * hueco que queda hasta el texto.
+   */
+  .personaje :global(.personaje__pieza) {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    max-width: none;
+    height: 100%;
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.6s var(--curva-hoja),
+      transform 0.6s var(--curva-hoja);
+  }
+
+  .personaje :global(.personaje__pieza[data-visible]) {
+    opacity: 1;
+    transform: none;
+  }
+</style>

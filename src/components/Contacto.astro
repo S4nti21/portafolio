@@ -3,6 +3,7 @@ import { perfil } from '../data/perfil';
 import { ruta } from '../utils/rutas';
 import EncabezadoSeccion from './EncabezadoSeccion.astro';
 import FondoSeccion from './FondoSeccion.astro';
+import Personaje from './Personaje.astro';
 
 const { contacto } = perfil;
 const mailto = `mailto:${contacto.email}`;
@@ -48,6 +49,8 @@ const enlacesExternos = [
         </li>
       )}
     </ul>
+
+    <Personaje />
   </div>
 </section>
 
@@ -90,5 +93,25 @@ const enlacesExternos = [
     margin: 40px 0 0;
     padding: 0;
     list-style: none;
+  }
+
+  /*
+   * Desde 75em el personaje de la energía ocupa la derecha (ver Personaje.astro).
+   * Lienzo de referencia de los personajes: 700 × 1180. Uno más ancho, como Obi-Wan, se
+   * extiende hacia la izquierda, sobre el hueco que queda hasta el texto.
+   */
+  @media (min-width: 75em) {
+    .contacto {
+      --alto-personaje: clamp(480px, 46vw, 680px);
+      --ancho-personaje: calc(var(--alto-personaje) * 700 / 1180);
+    }
+
+    /* El texto nunca pasa por debajo del personaje: el título va siempre en dos líneas. */
+    .contacto :global(.titulo),
+    .contacto__bajada,
+    .contacto__email,
+    .contacto__acciones {
+      max-width: calc(100% - var(--ancho-personaje) - 48px);
+    }
   }
 </style>

@@ -30,7 +30,8 @@ const sitio = Astro.site ?? Astro.url;
 const canonica = new URL(Astro.url.pathname, sitio).href;
 const imagenAbsoluta = new URL(imagen, sitio).href;
 const esImagenPorDefecto = imagen === ruta('/og.png');
-// "<" escapado: el JSON va dentro de un <script> y no debe poder cerrarlo.
+// "<" escapado: el JSON va dentro de una etiqueta script y no debe poder cerrarla.
+// (Sin escribir la etiqueta: el escáner de dependencias de Vite la tomaría como código.)
 const jsonLd = datosEstructurados && JSON.stringify(datosEstructurados).replace(/</g, '\\u003c');
 ---
 
