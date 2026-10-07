@@ -16,7 +16,7 @@ Portafolio personal de **Santiago Weidmann**, desarrollador de software Jr. (Jav
 
 ## Requisitos
 
-- **Node.js 24 LTS** (24.16 o superior). Astro funciona desde Node 22.12, pero las herramientas de lint piden 24.16. Con una versión anterior, `npm install` muestra avisos `EBADENGINE`. La versión está indicada en `.nvmrc`.
+- **Node.js 24 LTS** (24.16 o superior). Astro funciona desde Node 22.12, pero las herramientas de lint piden 24.16. Con una versión anterior, `npm install` muestra avisos `EBADENGINE`. `.nvmrc` fija la versión exacta, y es la que usa Cloudflare para el build.
 - **Conexión a internet** la primera vez que corras `dev` o `build`: Astro descarga las fuentes de Fontsource y después las guarda en caché.
 
 ## Cómo correrlo
@@ -49,7 +49,7 @@ src/
 ├─ styles/              ← tokens.css (colores, fuentes y medidas) y global.css
 ├─ layouts/Base.astro   ← <head>, fuentes, SEO y fondo de estrellas
 └─ pages/               ← inicio, /intro, /misiones/[slug], 404 y robots.txt
-public/                 ← archivos que se publican tal cual: CV, íconos y og.png
+public/                 ← archivos que se publican tal cual (CV, íconos y og.png) y _headers
 ```
 
 Las carpetas `diseno/` y `cv/` son referencias locales: el diseño original y el CV fuente. Están en `.gitignore` y no forman parte del sitio.
@@ -181,19 +181,32 @@ npm run build     # revisa tipos y genera dist/
 npm run preview   # sirve dist/ en http://localhost:4321
 ```
 
-`dist/` es el sitio completo y estático. Se puede subir a cualquier hosting estático: Netlify, Vercel, Cloudflare Pages o GitHub Pages.
+`dist/` es el sitio completo y estático. Se publica en **Cloudflare Pages**, en <https://santiago-weidmann.pages.dev>. El proyecto está conectado a este repo de GitHub: cada push a `main` se construye y se publica solo, y los push a otras ramas generan una vista previa con su propia URL.
 
-Antes de publicar, revisá las dos constantes del principio de **`astro.config.mjs`**:
+Para crear el proyecto en Cloudflare: **Workers & Pages** → **Create application** → **Pages** → **Import an existing Git repository**. Elegí este repo y completá:
 
-- `SITIO` es la URL pública. La actual (`https://s4nti21.github.io`) es **provisoria**. Se usa en las URLs canónicas, el sitemap, `robots.txt` y las imágenes para redes.
+| Opción                 | Valor                                                     |
+| ---------------------- | --------------------------------------------------------- |
+| Project name           | `santiago-weidmann` (define el subdominio de `pages.dev`) |
+| Production branch      | `main`                                                    |
+| Framework preset       | Astro                                                     |
+| Build command          | `npm run build`                                           |
+| Build output directory | `dist`                                                    |
+
+No hace falta adaptador ni variables de entorno, porque el sitio es estático. Cloudflare usa la versión de Node de `.nvmrc`.
+
+Las dos constantes del principio de **`astro.config.mjs`**:
+
+- `SITIO` es la URL pública. Se usa en las URLs canónicas, el sitemap, `robots.txt` y las imágenes para redes. Si pasás a un dominio propio, cambiala acá.
 - `BASE` es la subcarpeta desde la que se sirve el sitio:
-  - `'/'` sirve para un dominio propio, Netlify, Vercel o GitHub Pages de usuario (`s4nti21.github.io`).
+  - `'/'` sirve para Cloudflare Pages, un dominio propio, Netlify, Vercel o GitHub Pages de usuario.
   - Para GitHub Pages de proyecto, usá el nombre del repo, por ejemplo `'/portafolio'`.
   - Los links internos se adaptan solos.
 
 Otros detalles:
 
-- La página 404 se genera como `dist/404.html`, y la mayoría de los hostings la usa automáticamente.
+- `public/_headers` tiene los encabezados que agrega Cloudflare Pages: protecciones básicas en todo el sitio y caché de un año para `/_astro/`, donde el build deja los archivos con hash en el nombre.
+- La página 404 se genera como `dist/404.html`, y Cloudflare Pages la usa automáticamente.
 - La imagen para compartir en redes es `public/og.png` (1200 × 630). Los íconos también están en `public/`: `favicon.svg`, `favicon.ico` y `apple-touch-icon.png`.
 - `/intro/` es un extra y no una página de contenido: no aparece en el sitemap y lleva `noindex`.
 

@@ -1,0 +1,16 @@
+# Encabezados HTTP que Cloudflare Pages agrega a las respuestas. Este archivo no se publica:
+# Pages lo lee al desplegar. Sintaxis: https://developers.cloudflare.com/pages/configuration/headers/
+
+# Todo el sitio, protecciones básicas:
+# - nosniff: el navegador respeta el tipo de cada archivo y no intenta adivinarlo.
+# - DENY: ningún otro sitio puede mostrar este dentro de un iframe (evita el clickjacking).
+# - Referrer-Policy: al ir a otro sitio desde un link, solo se manda el dominio, no la ruta.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# Lo que genera el build en /_astro/ (JS, imágenes y fuentes) lleva un hash en el nombre que
+# cambia si cambia el contenido: el navegador lo puede guardar un año sin volver a pedirlo.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable

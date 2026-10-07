@@ -3,15 +3,17 @@ import sitemap from '@astrojs/sitemap';
 import { defineConfig, fontProviders } from 'astro/config';
 
 /**
- * URL pública del sitio. Es PROVISORIA: cambiala cuando sepas dónde lo publicás.
- * Se usa para el sitemap, las URLs canónicas y las imágenes de Open Graph.
+ * URL pública del sitio: el subdominio de Cloudflare Pages, que sale del nombre del
+ * proyecto. Si algún día usás un dominio propio, cambiala acá.
+ * Se usa para el sitemap, robots.txt, las URLs canónicas y las imágenes de Open Graph.
  */
-const SITIO = 'https://s4nti21.github.io';
+const SITIO = 'https://santiago-weidmann.pages.dev';
 
 /**
  * Subcarpeta desde la que se sirve el sitio. Dejá '/' si va en la raíz del dominio
- * (Vercel, Netlify, GitHub Pages de usuario). Para GitHub Pages de proyecto usá, por
- * ejemplo, '/portafolio'. Todos los links internos se adaptan solos (ver src/utils/rutas.ts).
+ * (Cloudflare Pages, Vercel, Netlify, GitHub Pages de usuario). Para GitHub Pages de
+ * proyecto usá, por ejemplo, '/portafolio'. Todos los links internos se adaptan solos
+ * (ver src/utils/rutas.ts).
  */
 const BASE = '/';
 
