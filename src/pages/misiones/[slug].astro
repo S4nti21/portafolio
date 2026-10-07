@@ -76,7 +76,7 @@ const enlaces = [
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {enlace.texto} <span aria-hidden="true">↗</span>
+                  {enlace.texto}
                   <span class="sr-only">(se abre en otra pestaña)</span>
                 </a>
               </li>
@@ -97,14 +97,10 @@ const enlaces = [
             </h2>
             <p class="caso__destacado">{data.problema}</p>
           </section>
-          <section class="caso__bloque" aria-labelledby="caso-solucion">
-            <h2 id="caso-solucion" class="etiqueta caso__subtitulo">
-              La solución
-            </h2>
-            <div class="prosa">
-              <Content />
-            </div>
-          </section>
+          <!-- "La solución" y las demás secciones vienen del Markdown, cada una con su título ##. -->
+          <div class="prosa">
+            <Content />
+          </div>
         </div>
 
         <aside class="caso__lateral" aria-label="Ficha de la misión">
@@ -353,7 +349,7 @@ const enlaces = [
     text-shadow: 0 0 18px rgb(var(--accrgb) / 0.8);
   }
 
-  /* Texto del cuerpo Markdown (la solución). */
+  /* Texto del cuerpo Markdown: "La solución" y las demás secciones. */
   .prosa {
     max-width: 65ch;
     font-size: 17px;
@@ -365,6 +361,16 @@ const enlaces = [
     margin-top: 1em;
   }
 
+  /* Títulos de sección (##): iguales a "El problema" (.etiqueta). */
+  .prosa :global(h2) {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--texto-72);
+  }
+
   .prosa :global(h3) {
     margin-top: 1.8em;
     font-family: var(--font-titulo);
@@ -373,6 +379,15 @@ const enlaces = [
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-dorado);
+  }
+
+  /* Misma separación que entre "El problema" y lo que sigue (.caso__relato y .caso__bloque). */
+  .prosa :global(* + h2) {
+    margin-top: 40px;
+  }
+
+  .prosa :global(h2 + *) {
+    margin-top: 14px;
   }
 
   .prosa :global(ul),

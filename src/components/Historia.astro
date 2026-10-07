@@ -5,6 +5,8 @@ import { perfil } from '../data/perfil';
 import EncabezadoSeccion from './EncabezadoSeccion.astro';
 
 const { historia } = perfil;
+// Anchos a generar: nunca más grandes que el original (Astro no agranda imágenes).
+const anchos = [...[352, 440, 696, 880].filter((ancho) => ancho < foto.width), foto.width];
 ---
 
 <section id="historia" class="seccion" aria-labelledby="historia-titulo">
@@ -39,7 +41,7 @@ const { historia } = perfil;
           alt={historia.fotoAlt}
           formats={['avif']}
           fallbackFormat="webp"
-          widths={[352, 440, 696]}
+          widths={anchos}
           sizes="(min-width: 30em) 440px, calc(100vw - 40px)"
         />
       </div>

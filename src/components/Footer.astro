@@ -1,6 +1,5 @@
 ---
 import { perfil } from '../data/perfil';
-import { ruta } from '../utils/rutas';
 
 interface Props {
   /** A dónde lleva "Volver arriba" (en la home, al inicio). */
@@ -28,11 +27,6 @@ const anio = new Date().getFullYear();
           </button>
         </li>
       )}
-      <li>
-        <a class="pie__enlace" href={ruta('/intro/')}>
-          Intro sola <span aria-hidden="true">↗</span>
-        </a>
-      </li>
       <li>
         <a class="pie__enlace" href={`#${anclaArriba}`}>
           Volver arriba <span aria-hidden="true">↑</span>

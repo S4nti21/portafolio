@@ -12,9 +12,10 @@ anio: 2026
 categoria: 'Aplicación web'
 # Una línea: qué es y para quién.
 resumen: 'Qué es el proyecto, en una línea.'
-# Una o dos oraciones cada uno.
+# Una o dos oraciones cada uno. El resultado responde al problema: qué cambió gracias al
+# proyecto. Las funcionalidades van en "La solución", no acá.
 problema: 'Qué problema resolvía.'
-resultado: 'Qué lograste, con un número o un hito concreto si podés.'
+resultado: 'Qué cambió, con un número o un hito concreto si podés.'
 # Tecnologías, en el orden en que querés mostrarlas.
 stack: ['Java', 'Spring', 'MySQL']
 # Opcionales: sacales el # para usarlos.
@@ -28,14 +29,21 @@ orden: 4
 borrador: true
 ---
 
-Acá va "La solución": contá cómo resolviste el problema, qué construiste, qué decisiones técnicas tomaste y por qué.
+## La solución
 
-### Lo que hice
+Contá cómo resuelve el problema: qué construiste y cómo responde a lo que planteaste en `problema`.
 
-- Una funcionalidad concreta que programaste.
-- Una decisión técnica importante y su motivo.
-- Cómo lo probaste o lo pusiste en marcha.
+### Qué hace
 
-### Lo que aprendí
+- Una funcionalidad concreta.
+- Otra funcionalidad.
+
+### Por qué elegí esta tecnología
+
+Una decisión técnica importante y su motivo.
+
+<!-- Podés sumar otras secciones con ##, como "Mi parte" si fue en equipo o "Cómo está hecho". -->
+
+## Lo que aprendí
 
 Algo que te llevaste de este proyecto y que vas a aplicar en el próximo.

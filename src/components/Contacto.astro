@@ -31,14 +31,14 @@ const enlacesExternos = [
       {enlacesExternos.map((enlace) => (
         <li>
           <a class="boton" href={enlace.url} target="_blank" rel="noopener noreferrer">
-            {enlace.texto} <span aria-hidden="true">↗</span>
+            {enlace.texto}
             <span class="sr-only">(se abre en otra pestaña)</span>
           </a>
         </li>
       ))}
       <li>
         <a class="boton" href={ruta(contacto.cv)} download>
-          Descargar CV <span aria-hidden="true">↓</span>
+          Descargar CV
         </a>
       </li>
       {contacto.mostrarTelefono && (

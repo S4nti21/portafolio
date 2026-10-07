@@ -75,7 +75,7 @@ Otros cambios frecuentes:
 - **Teléfono**: está oculto. Aparece cuando ponés `mostrarTelefono: true` en `contacto`.
 - **Foto**:
   - Reemplazá `src/assets/foto-perfil.webp` por otra con el mismo nombre.
-  - Conviene que sea vertical y de al menos 700 px de ancho. Se recorta a 4:5 y Astro genera las versiones AVIF y WebP.
+  - Conviene que sea vertical y de al menos 1000 px de ancho, para que se vea nítida en celulares y pantallas de alta densidad. Se recorta a 4:5 y Astro genera las versiones AVIF y WebP.
   - Actualizá también `historia.fotoAlt`.
 - **CV**: reemplazá el PDF de `public/cv/` por otro con el mismo nombre, o cambiá la ruta en `contacto.cv`.
 - **Colores de energía**:
@@ -103,7 +103,9 @@ Cada archivo `.md` de `src/content/misiones/` es una misión. El nombre del arch
    | `imagen` / `imagenAlt`   | No            | Portada y su descripción (ver abajo).                                                |
    | `borrador`               | No            | Con `true`, solo se ve con `npm run dev`. Por defecto es `false`.                    |
 
-3. Debajo del frontmatter escribí **"La solución"** en Markdown. Para los subtítulos usá `###`, porque la página ya usa los niveles de título anteriores.
+   El `resultado` tiene que responder al `problema`: qué cambió gracias al proyecto, mejor con un número o un hito concreto. Las funcionalidades van en "La solución".
+
+3. Debajo del frontmatter escribí el cuerpo en Markdown, dividido en secciones con `##`. Empezá con `## La solución`: cómo resuelve el problema. Después podés sumar otras, como `## Mi parte` si fue en equipo, `## Cómo está hecho` o `## Lo que aprendí`. Los subtítulos dentro de una sección van con `###`.
 
 **Imagen de portada**: guardala en `src/assets/misiones/` y referenciala con una ruta relativa al `.md`:
 
@@ -198,7 +200,7 @@ Otros detalles:
 ## La intro
 
 - En la home se muestra sola **una vez por sesión**, porque queda guardado en `sessionStorage`. Para verla de nuevo, usá "▶ Ver intro" en el pie o abrí el sitio en una pestaña nueva.
-- Se cierra con "Saltar intro →", `Esc` o `Enter`.
+- Se cierra con "Saltar intro", `Esc` o `Enter`.
 - `/intro/` la muestra sola y termina con "Ver de nuevo" e "Ir al portafolio".
 - Si el sistema tiene activado "reducir movimiento", se muestra una versión estática.
 
