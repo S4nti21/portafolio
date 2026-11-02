@@ -180,7 +180,7 @@ export const perfil: Perfil = {
   contacto: {
     bajada: 'Elegí tu lado. Yo pongo el resto.',
     email: 'sweidmann13@gmail.com',
-    linkedin: 'https://www.linkedin.com/in/santiagoweidmann',
+    linkedin: 'https://www.linkedin.com/in/santiago-weidmann/',
     github: 'https://github.com/S4nti21',
     cv: '/cv/CV_Santiago_Weidmann_ATS.pdf',
     mostrarTelefono: false,
